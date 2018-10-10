@@ -3,11 +3,13 @@
         <div id="output">
             <div *ngIf="messages !== null">
                 <div *ngFor="let message of messages">
-                    <div class="space" [ngClass]="{'offset-6': message.from !== username, 'col-6': message.from === username}">
+                    <div class="space"
+                         [ngClass]="{'offset-6': message.from !== username, 'col-6': message.from === username}">
                         <p><strong>{{message.from}}:</strong> {{message.content}}</p>
                     </div>
                 </div>
             </div>
+            <div *ngIf="typingUser">{{typingUser}} is typing</div>
         </div>
         <div id="feedback"></div>
     </div>
@@ -24,7 +26,8 @@
                placeholder="Type your message..."
                [(ngModel)]="messageContent"
                name="content"
-               autocomplete="off">
+               autocomplete="off"
+               (keypress)="sendUser()">
         <button id="send" [disabled]="f.invalid">Send</button>
     </form>
 </div>

@@ -4,7 +4,7 @@ import {Message} from '../model/message';
 
 import * as socketIo from 'socket.io-client';
 
-const SERVER_URL = 'http://localhost:8080';
+const SERVER_URL = 'http://localhost:4000';
 
 @Injectable()
 export class SocketService {
@@ -23,10 +23,20 @@ export class SocketService {
         this.socket.emit('message', message);
     }
 
+    sendUser(user: string): void {
+        this.socket.emit('typing', user);
+    }
+
     // listen to upcoming data from the server
     onMessage(): Observable<Message> {
         return new Observable<Message>(observer => {
             this.socket.on('message', (data: Message) => observer.next(data));
+        });
+    }
+
+    onTyping(): Observable<string> {
+        return new Observable<string>(observer => {
+            this.socket.on('typing', (data: string) => observer.next(data));
         });
     }
 }

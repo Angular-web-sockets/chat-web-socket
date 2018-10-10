@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Message} from "./shared/model/message";
 import {SocketService} from "./shared/services/socket.service";
 
@@ -11,6 +11,7 @@ export class AppComponent implements OnInit {
     messages: Message[] = [];
     username: string;
     messageContent: string;
+    typingUser: string;
 
     constructor(private socketService: SocketService) {
     }
@@ -26,7 +27,14 @@ export class AppComponent implements OnInit {
       this.socketService.onMessage()
             .subscribe((message: Message) => {
                 this.messages.push(message);
+                this.typingUser = null;
             });
+
+        this.socketService.onTyping()
+            .subscribe((user: string) => {
+                this.typingUser = user;
+                console.log('yes typing');
+            })
     }
 
     // send data to the server from the current socket
@@ -40,4 +48,7 @@ export class AppComponent implements OnInit {
         this.messageContent = null;
     }
 
+    sendUser(): void {
+        this.socketService.sendUser(this.username);
+    }
 }
